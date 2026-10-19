@@ -736,6 +736,8 @@ textarea { resize: vertical; min-height: 100px; }
   </div>
   <div class="music-drawer" id="musicDrawer" hidden>
     <div class="bg-yt-box" id="bgYtBox"></div>
+    <p class="music-sub" id="musicHelp" style="margin-top:8px;line-height:1.5">Nếu nhạc chưa tự phát, hãy bấm nút ▶ trong khung video. Nếu video không phát được, mở trực tiếp trên YouTube.</p>
+    <a id="openYouTubeMusic" href="https://www.youtube.com/watch?v=fbVv38e1n6w" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:6px;color:var(--accent);font-weight:700;text-decoration:underline">Mở bài nhạc trên YouTube ↗</a>
   </div>
 </div>
 
@@ -1235,26 +1237,34 @@ function confetti(n) {
 let bgPlaying = false;
 function loadBgYouTube(url) {
   const vid = extractYouTubeId(url);
-  if (!vid) return false;
-  $("bgYtBox").innerHTML = `<iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&loop=1&playlist=${vid}&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Nhạc nền YouTube"></iframe>`;
+  if (!vid) {
+    $("mSub").textContent = "Không đọc được đường dẫn nhạc. Hãy kiểm tra link YouTube.";
+    return false;
+  }
+  const drawer = $("musicDrawer");
+  const box = $("bgYtBox");
+  // Chỉ tạo iframe sau thao tác bấm của người dùng để giảm khả năng trình duyệt chặn phát.
+  box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&playsinline=1&loop=1&playlist=${vid}&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="Nhạc nền tặng Phi Yến"></iframe>`;
+  $("openYouTubeMusic").href = `https://www.youtube.com/watch?v=${vid}`;
+  drawer.hidden = false;
   bgPlaying = true;
   $("vinylIcon").classList.add("playing");
-  $("togglePlayBtn").textContent = "▾ Ẩn khung";
-  $("mSub").textContent = "Đang phát nhạc nền tặng Phi Yến ♪";
-  $("musicDrawer").hidden = false;
+  $("togglePlayBtn").textContent = "▾ Ẩn khung nhạc";
+  $("mSub").textContent = "Đã mở trình phát nhạc ♪ Nếu chưa nghe, bấm ▶ trong khung video.";
   return true;
 }
 
-$("togglePlayBtn").onclick = () => {
+$("togglePlayBtn").addEventListener("click", () => {
   const drawer = $("musicDrawer");
   if (!bgPlaying) {
     loadBgYouTube(currentBgYt);
-  } else {
-    drawer.hidden = !drawer.hidden;
-    $("togglePlayBtn").textContent = drawer.hidden ? "▴ Hiện nhạc" : "▾ Ẩn khung";
+    return;
   }
-};
-$("vinylIcon").onclick = () => $("togglePlayBtn").click();
+  drawer.hidden = !drawer.hidden;
+  $("togglePlayBtn").textContent = drawer.hidden ? "▶ Hiện nhạc" : "▾ Ẩn khung nhạc";
+  if (!drawer.hidden && !$("bgYtBox").querySelector("iframe")) loadBgYouTube(currentBgYt);
+});
+$("vinylIcon").addEventListener("click", () => $("togglePlayBtn").click());
 
 function initFireflies() {
   for (let i = 0; i < 12; i++) {
