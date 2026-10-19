@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>20 bông hoa tặng Phi Yến - 20/11</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -612,7 +613,10 @@ button.pill:not(:disabled) {
   overflow: hidden;
   background: #000;
 }
-.bg-yt-box iframe { width: 100%; height: 100%; border: 0; }
+.bg-yt-box iframe { width: 100%; height: 100%; border: 0; display: block; }
+.music-drawer.collapsed { height: 0; margin: 0; padding: 0; border: 0; overflow: hidden; }
+.music-err { margin: 8px 0 0; font: 400 .75rem/1.4 var(--sans); color: var(--soft); }
+.music-err a { color: var(--accent); font-weight: 700; }
 
 textarea, .card input {
   width: 100%;
@@ -731,13 +735,13 @@ textarea { resize: vertical; min-height: 100px; }
       <p class="music-sub" id="mSub">Bấm "Mở nhạc" để vừa nghe vừa ngắm hoa nhé</p>
     </div>
     <div class="music-actions">
+      <button class="m-btn" id="pauseBtn" type="button" title="Phát / Tạm dừng" hidden>⏸</button>
       <button class="m-btn primary" id="togglePlayBtn" type="button">▶ Mở nhạc</button>
     </div>
   </div>
-  <div class="music-drawer" id="musicDrawer" hidden>
+  <div class="music-drawer collapsed" id="musicDrawer">
     <div class="bg-yt-box" id="bgYtBox"></div>
-    <p class="music-sub" id="musicHelp" style="margin-top:8px;line-height:1.5">Nếu nhạc chưa tự phát, hãy bấm nút ▶ trong khung video. Nếu video không phát được, mở trực tiếp trên YouTube.</p>
-    <a id="openYouTubeMusic" href="https://www.youtube.com/watch?v=fbVv38e1n6w" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:6px;color:var(--accent);font-weight:700;text-decoration:underline">Mở bài nhạc trên YouTube ↗</a>
+    <p class="music-err" id="musicErr" hidden></p>
   </div>
 </div>
 
@@ -772,7 +776,7 @@ textarea { resize: vertical; min-height: 100px; }
 const CFG = {
   her: "Phi Yến",
   him: "Anh",
-  bgYoutubeUrl: "https://www.youtube.com/watch?v=fbVv38e1n6w",
+  bgYoutubeUrl: "https://youtu.be/_MWEapW4PaE?si=vGS9mw4npQcq0H8J",
   bgSongTitle: "Giai điệu gửi tặng Phi Yến ♡",
   finalTitle: "20 bông hoa này cũng không thể xinh bằng bông hoa Phi Yến của anh rồi ♡",
   finalText: "Hai mươi bông hoa cho ngày hai mươi tháng mười một.\nCảm ơn em vì đã đến và làm cuộc đời anh ngọt ngào, dịu dàng hơn bao giờ hết.\nChúc công chúa Phi Yến của anh một ngày 20/11 thật rực rỡ, hạnh phúc và luôn mãi là bông hoa xinh đẹp nhất trong tim anh!",
@@ -783,10 +787,12 @@ const CFG = {
   items: [
     /* 1. PHOTOBOOTH ĐẦU TIÊN CỦA CHÚNG MÌNH */
     {
-      type: "photobooth",
-      photo: "images/anh-02.jpg",
+      type: "multi_photos",
+      photo: [
+	"images/anh-02.jpg",
+	"images/anh-11.jpg",
       caption: "우리들의 하루 ♡ 20/11",
-      text: "Bộ ảnh photobooth đầu tiên của hai đứa mình, từng khung hình đều đáng yêu hết nấc!"
+      text: "Bộ ảnh photobooth đầu tiên của hai đứa mình. Nhìn cưng xỉu"
     },
 
     /* 2. NHIỀU ẢNH: KHOẢNH KHẮC XINH YÊU CỦA PHI YẾN (CÓ THỂ ADD NHIỀU ẢNH) */
@@ -802,11 +808,11 @@ const CFG = {
       ]
     },
 
-    /* 3. NHIỀU ẢNH: ALBUM KỶ NIỆM CỦA TỤI MÌNH */
+    /* 3. NHIỀU ẢNH: ALBUM ẢNH CỦA TỤI MÌNH */
     {
       type: "multi_photos",
-      title: "Album kỷ niệm của tụi mình 📸",
-      text: "Từng nụ cười, từng cái nhéo má hay tạo dáng tai gấu bên em đều là những ký ức vô giá.",
+      title: "Album ảnh của tụi mình 📸",
+      text: "Với anh mỗi tấm hình, mỗi photobooth đều là một kỉ niệm vô cùng quý giá.",
       photos: [
         "images/anh-07.jpg",
         "images/anh-08.jpg",
@@ -827,24 +833,25 @@ const CFG = {
     {
       type: "english",
       title: "Lời nhắn ngọt ngào dành cho em ✨",
-      quote: "“Giữa thế giới luôn đổi thay, em là cảm giác yêu thương và ấm áp mãi ở lại trong tim anh.”",
-      text: "Chúc cô gái anh yêu một ngày 20/11 thật vui vẻ! Mong em luôn rạng rỡ, xinh đẹp và hạnh phúc."
+      quote: "“Giữa thế giới bồn bề thay đổi, em là cảm giác yêu thương, là ngọn lửa sưởi ấm tim anh.”",
+      text: "Chúc cô gái anh yêu một ngày 20/11 thật vui vẻ! Mong em luôn rực rỡ, xinh đẹp và hạnh phúc."
     },
 
     /* 6. ĐẶC QUYỀN: 1 LY MATCHA */
     {
       type: "coupon",
-      title: "Vé 1 Ly Matcha Yêu Thích 🍵",
+      title: "Vé 1 Ly Matcha Banana 🍵",
       code: "MATCHA-VIP",
-      text: "Đặc quyền được anh order/mua tặng 1 ly matcha thơm ngon đúng vị bất kể lúc nào em thèm ♡"
+      text: "Đặc quyền được anh order/mua tặng 1 ly matcha banana thơm ngon đúng vị ♡"
     },
 
     /* 7. TOÁN HỌC: PHƯƠNG TRÌNH TRÁI TIM */
     {
       type: "math",
       title: "Phương trình trái tim Cardioide ♡",
+      photos: "images/anh-20.jpg"
       formula: "(x² + y² - 1)³ - x² y³ = 0",
-      text: "Dù đặt trong bất kỳ hệ tọa độ không gian nào, thì tâm đối xứng và vector cảm xúc của anh cũng chỉ hướng về một tọa độ duy nhất: Phi Yến."
+      text: "Dù đặt trong bất kỳ hệ tọa độ không gian nào, thì tâm đối xứng và vector cảm xúc của anh cũng chỉ hướng về một tọa độ duy nhất đó là tọa độ Phi Yến."
     },
 
     /* 8. LỜI NHẮN YÊU THƯƠNG */
@@ -860,7 +867,7 @@ const CFG = {
       type: "coupon",
       title: "Vé Chụt Anh 1 Cái Thật Kêu 💋",
       code: "CHUT-ANH-VIP",
-      text: "Đặc quyền bắt anh đứng yên để em thơm má, chụt một cái thật kêu bất cứ lúc nào em muốn (hoặc ngược lại anh chụt em nha) ♡"
+      text: "Đặc quyền được chụt anh bao nhiu cái cũn đượt hoặc ngược lại (hehe) ♡"
     },
 
     /* 10. LỜI EM MUỐN NÓI */
@@ -897,7 +904,7 @@ const CFG = {
     {
       type: "music",
       title: "Giai điệu tặng Phi Yến ♪",
-      yt: "https://www.youtube.com/watch?v=fbVv38e1n6w",
+      yt: "https://youtu.be/soRT2hsA5BM?si=KeXZavSNhXa_EW70",
       text: "Một giai điệu êm dịu dành cho những ngày bình yên hai đứa cùng nghe và mỉm cười."
     },
 
@@ -905,8 +912,8 @@ const CFG = {
     {
       type: "english",
       title: "Một lời nhắc dịu dàng 🌷",
-      quote: "“Em không cần hoàn hảo để trở nên tuyệt vời. Anh yêu chính con người em, từ tiếng cười đến những lúc em hờn dỗi.”",
-      text: "Anh thương cả những lúc em ngoan ngoãn lẫn những lúc em nhõng nhẽo, giận hờn vu vơ."
+      quote: "“Em luôn là bông hoa rạng rỡ nhất trong lòng anh.”",
+      text: "Anh chúc Phi Yến luôn thành công trong sự nghiệp và hãy nhớ phía sau em luôn có sự ủng hộ của anh."
     },
 
     /* 16. TOÁN HỌC: PHÉP CỘNG TÌNH YÊU */
@@ -943,7 +950,7 @@ const CFG = {
     {
       type: "english",
       title: "Câu chuyện đẹp của chúng mình 📖",
-      quote: "“Mọi câu chuyện tình yêu đều đẹp, nhưng câu chuyện của chúng mình sẽ luôn là câu chuyện anh yêu thích nhất.”",
+      quote: "“Bước vào tiệm giày, anh không thấy đôi nào hợp như đôi tar.”",
       text: "Cảm ơn em vì đã cùng anh viết nên những trang kỷ niệm đẹp nhất. Mong cuốn nhật ký này sẽ ngày càng dày thêm qua từng năm tháng."
     },
 
@@ -1117,11 +1124,11 @@ function openSheet(i) {
            <button class="btn" id="gs" type="button">Nhắn đòi quà shipper giao cho anh ngay ♡</button>
          </div>`;
   } else if (it.type === "music") {
-    const vid = extractYouTubeId(it.yt || currentBgYt);
     h = `<p class="tag">Giai điệu tặng em ♪</p>
          <p class="big" style="margin-bottom:8px">${esc(it.title || "Bài hát của tụi mình")}</p>
-         ${vid ? `<div class="yt-embed-wrap"><iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="YouTube music"></iframe></div>` : ""}
+         <button class="btn js-music-btn" type="button" onclick="toggleMusic()">▶ Nghe nhạc</button>
          <p class="say">${esc(it.text)}</p>`;
+    setTimeout(() => playMusic(it.yt), 0);
   } else if (it.type === "quiz") {
     h = `<p class="tag">Câu đố nho nhỏ</p>
          <p class="big">${esc(it.question)}</p>
@@ -1234,37 +1241,120 @@ function confetti(n) {
   }
 }
 
-let bgPlaying = false;
-function loadBgYouTube(url) {
-  const vid = extractYouTubeId(url);
-  if (!vid) {
-    $("mSub").textContent = "Không đọc được đường dẫn nhạc. Hãy kiểm tra link YouTube.";
-    return false;
-  }
-  const drawer = $("musicDrawer");
-  const box = $("bgYtBox");
-  // Chỉ tạo iframe sau thao tác bấm của người dùng để giảm khả năng trình duyệt chặn phát.
-  box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&playsinline=1&loop=1&playlist=${vid}&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="Nhạc nền tặng Phi Yến"></iframe>`;
-  $("openYouTubeMusic").href = `https://www.youtube.com/watch?v=${vid}`;
-  drawer.hidden = false;
-  bgPlaying = true;
-  $("vinylIcon").classList.add("playing");
-  $("togglePlayBtn").textContent = "▾ Ẩn khung nhạc";
-  $("mSub").textContent = "Đã mở trình phát nhạc ♪ Nếu chưa nghe, bấm ▶ trong khung video.";
-  return true;
+/* ===== Trình phát nhạc YouTube (IFrame Player API) ===== */
+let ytPlayer = null, ytReady = false, ytApiRequested = false;
+let currentVid = extractYouTubeId(currentBgYt);
+let wantPlay = false, userPaused = false, bgPlaying = false, playCheck = null;
+
+function setMusicUI(playing) {
+  bgPlaying = playing;
+  $("vinylIcon").classList.toggle("playing", playing);
+  $("pauseBtn").hidden = false;
+  $("pauseBtn").textContent = playing ? "⏸" : "▶";
+  $("mSub").textContent = playing ? "Đang phát nhạc nền tặng Phi Yến ♪" : "Nhạc đang tạm dừng";
+  document.querySelectorAll(".js-music-btn").forEach(b => b.textContent = playing ? "⏸ Tạm dừng" : "▶ Nghe nhạc");
 }
 
-$("togglePlayBtn").addEventListener("click", () => {
-  const drawer = $("musicDrawer");
-  if (!bgPlaying) {
-    loadBgYouTube(currentBgYt);
-    return;
+function showMusicError(msg) {
+  const e = $("musicErr");
+  const url = "https://www.youtube.com/watch?v=" + currentVid;
+  e.innerHTML = (msg || "Không phát được nhạc trong trang.") + ' <a href="' + url + '" target="_blank" rel="noopener">Mở trên YouTube ↗</a>';
+  e.hidden = false;
+  $("musicDrawer").classList.remove("collapsed");
+  $("mSub").textContent = "Không phát được tự động";
+  $("vinylIcon").classList.remove("playing");
+}
+
+function createPlayer() {
+  if (ytPlayer || !currentVid) return;
+  const holder = document.createElement("div");
+  holder.id = "ytPlayer";
+  $("bgYtBox").appendChild(holder);
+  const vars = { playsinline: 1, rel: 0, loop: 1, playlist: currentVid, modestbranding: 1 };
+  if (/^https?:$/.test(location.protocol)) vars.origin = location.origin;
+  ytPlayer = new YT.Player("ytPlayer", {
+    videoId: currentVid,
+    width: "100%",
+    height: "100%",
+    playerVars: vars,
+    events: {
+      onReady: () => {
+        ytReady = true;
+        if (wantPlay) ytPlayer.playVideo();
+        armPlayCheck();
+      },
+      onStateChange: ev => {
+        if (ev.data === YT.PlayerState.PLAYING) { clearTimeout(playCheck); $("musicErr").hidden = true; setMusicUI(true); }
+        else if (ev.data === YT.PlayerState.PAUSED) setMusicUI(false);
+        else if (ev.data === YT.PlayerState.ENDED) ytPlayer.playVideo();
+      },
+      onError: ev => {
+        const c = ev.data;
+        showMusicError(c === 101 || c === 150 || c === 153
+          ? "Chủ video không cho phép nhúng, hoặc trang đang mở từ file (cần mở qua https://)."
+          : "Video không khả dụng.");
+      }
+    }
+  });
+}
+
+/* Nếu trình duyệt chặn tự phát: mở khung ra để bấm nút ▶ của YouTube */
+function armPlayCheck() {
+  clearTimeout(playCheck);
+  playCheck = setTimeout(() => {
+    if (wantPlay && !bgPlaying && !userPaused) {
+      $("musicDrawer").classList.remove("collapsed");
+      $("togglePlayBtn").textContent = "▾ Ẩn khung";
+      $("mSub").textContent = "Bấm nút ▶ trong khung video để nghe nhé";
+    }
+  }, 1800);
+}
+
+function loadYTApi() {
+  if (window.YT && YT.Player) { createPlayer(); return; }
+  if (ytApiRequested) return;
+  ytApiRequested = true;
+  window.onYouTubeIframeAPIReady = createPlayer;
+  const sc = document.createElement("script");
+  sc.src = "https://www.youtube.com/iframe_api";
+  sc.onerror = () => showMusicError("Không tải được trình phát YouTube (kiểm tra mạng).");
+  document.head.appendChild(sc);
+}
+
+function playMusic(url) {
+  const vid = url ? extractYouTubeId(url) : currentVid;
+  wantPlay = true;
+  userPaused = false;
+  if (vid && vid !== currentVid) {
+    currentVid = vid;
+    if (ytReady) ytPlayer.loadVideoById({ videoId: vid });
   }
-  drawer.hidden = !drawer.hidden;
-  $("togglePlayBtn").textContent = drawer.hidden ? "▶ Hiện nhạc" : "▾ Ẩn khung nhạc";
-  if (!drawer.hidden && !$("bgYtBox").querySelector("iframe")) loadBgYouTube(currentBgYt);
-});
-$("vinylIcon").addEventListener("click", () => $("togglePlayBtn").click());
+  $("musicDrawer").classList.remove("collapsed");
+  $("togglePlayBtn").textContent = "▾ Ẩn khung";
+  if (!ytPlayer) loadYTApi();
+  else if (ytReady) { ytPlayer.playVideo(); armPlayCheck(); }
+}
+
+function toggleMusic() {
+  if (!ytPlayer || !ytReady) { playMusic(); return; }
+  if (bgPlaying) { userPaused = true; ytPlayer.pauseVideo(); }
+  else playMusic();
+}
+
+$("togglePlayBtn").onclick = () => {
+  const drawer = $("musicDrawer");
+  if (!wantPlay) { playMusic(); return; }
+  drawer.classList.toggle("collapsed");
+  $("togglePlayBtn").textContent = drawer.classList.contains("collapsed") ? "▴ Hiện khung" : "▾ Ẩn khung";
+};
+$("pauseBtn").onclick = toggleMusic;
+$("vinylIcon").onclick = toggleMusic;
+
+/* Trình duyệt chỉ cho phát tiếng sau khi người dùng chạm: tự bật nhạc ở lần chạm đầu tiên */
+document.addEventListener("pointerdown", e => {
+  if (wantPlay || userPaused || e.target.closest(".music-dock")) return;
+  playMusic();
+}, { capture: true });
 
 function initFireflies() {
   for (let i = 0; i < 12; i++) {
