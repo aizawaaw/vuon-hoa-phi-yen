@@ -778,6 +778,7 @@ const CFG = {
   him: "Anh",
   bgYoutubeUrl: "https://youtu.be/_MWEapW4PaE?si=vGS9mw4npQcq0H8J",
   bgSongTitle: "Giai điệu gửi tặng Phi Yến ♡",
+  instagramUrl: "https://www.instagram.com/p.bacws/",
   finalTitle: "20 bông hoa này cũng không thể xinh bằng bông hoa Phi Yến của anh rồi ♡",
   finalText: "Hai mươi bông hoa cho ngày hai mươi tháng mười một.\nCảm ơn em vì đã đến và làm cuộc đời anh ngọt ngào, dịu dàng hơn bao giờ hết.\nChúc công chúa Phi Yến của anh một ngày 20/11 thật rực rỡ, hạnh phúc và luôn mãi là bông hoa xinh đẹp nhất trong tim anh!",
   
@@ -1154,7 +1155,11 @@ function openSheet(i) {
       store.set(KEY + "-g" + i, "1");
       confetti(20);
     };
-    $("gs").onclick = e => share("Anh ơi, em mở hộp quà số 20 rồi nè! Shipper giao tới là em bắt đền anh liền đó nha ♡", e.target);
+    $("gs").onclick = () => {
+      const msg = "Anh ơi, em mở hộp quà số 20 rồi nè! Shipper giao tới là em bắt đền anh liền đó nha ♡";
+      try { navigator.clipboard.writeText(msg); } catch (e) {}
+      window.open(CFG.instagramUrl, "_blank", "noopener");
+    };
   }
 
   if (it.type === "coupon") {
@@ -1200,6 +1205,7 @@ function openSheet(i) {
 function closeSheet() {
   $("sheet").classList.remove("show");
   $("body").innerHTML = "";
+  restoreBgMusic();
   if (done.size === N && !finaleSeen) setTimeout(finale, 450);
 }
 
@@ -1244,7 +1250,9 @@ function confetti(n) {
 
 /* ===== Trình phát nhạc YouTube (IFrame Player API) ===== */
 let ytPlayer = null, ytReady = false, ytApiRequested = false;
+const bgVid = extractYouTubeId(CFG.bgYoutubeUrl);
 let currentVid = extractYouTubeId(currentBgYt);
+let loadedVid = currentVid;
 let wantPlay = false, userPaused = false, bgPlaying = false, playCheck = null;
 
 function setMusicUI(playing) {
@@ -1281,7 +1289,8 @@ function createPlayer() {
     events: {
       onReady: () => {
         ytReady = true;
-        if (wantPlay) ytPlayer.playVideo();
+        if (loadedVid !== currentVid) { loadedVid = currentVid; ytPlayer.loadVideoById({ videoId: currentVid }); }
+        else if (wantPlay) ytPlayer.playVideo();
         armPlayCheck();
       },
       onStateChange: ev => {
@@ -1328,12 +1337,22 @@ function playMusic(url) {
   userPaused = false;
   if (vid && vid !== currentVid) {
     currentVid = vid;
-    if (ytReady) ytPlayer.loadVideoById({ videoId: vid });
+    if (ytReady) { loadedVid = vid; ytPlayer.loadVideoById({ videoId: vid }); }
   }
   $("musicDrawer").classList.remove("collapsed");
   $("togglePlayBtn").textContent = "▾ Ẩn khung";
   if (!ytPlayer) loadYTApi();
   else if (ytReady) { ytPlayer.playVideo(); armPlayCheck(); }
+}
+
+/* Đóng bông hoa nhạc -> quay về nhạc nền ban đầu */
+function restoreBgMusic() {
+  if (!bgVid || currentVid === bgVid) return;
+  currentVid = bgVid;
+  if (!ytReady) return;
+  loadedVid = bgVid;
+  if (userPaused) ytPlayer.cueVideoById({ videoId: bgVid });
+  else ytPlayer.loadVideoById({ videoId: bgVid });
 }
 
 function toggleMusic() {
