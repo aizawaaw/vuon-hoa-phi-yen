@@ -354,6 +354,15 @@ button.pill:not(:disabled) {
 .say { margin: 0 0 12px; color: var(--ink); }
 
 /* --- 1. KHUNG ẢNH PHOTOBOOTH --- */
+.math-photo {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin: 12px 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,.22);
+}
 .photobooth-card {
   width: min(320px, 100%);
   margin: 8px auto 16px;
@@ -1099,6 +1108,7 @@ function openSheet(i) {
            <div class="math-formula">${esc(it.formula)}</div>
            <p class="math-sub">✦ Định lý bất biến trong tim anh ✦</p>
          </div>
+         ${it.photos ? `<img class="math-photo" src="${esc(it.photos)}" alt="Phi Yến">` : ""}
          <p class="say">${esc(it.text)}</p>`;
   } else if (it.type === "english") {
     h = `<p class="tag">${esc(it.title)}</p>
